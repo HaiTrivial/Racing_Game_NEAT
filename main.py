@@ -1,5 +1,13 @@
 import pygame
 import math
+#To DOs:
+# click wehere to start -> while loop mit while startpunkt x/y none -> wenn click dann setze
+#let car picture tilt
+#fix borders of car
+
+Screen_width = 1024
+Screen_height = 768
+
 race_track1 = pygame.image.load("Race_Track2.jpg")
 car_img =pygame.transform.rotate(pygame.transform.scale( pygame.image.load("wagen.png"), (50,50)), 90)
 startpunkt_x = 75
@@ -23,6 +31,7 @@ class Car:
         #if events[pygame.K_DOWN] and self.speed > self.min_speed:
         #    self.speed -= 0.2
         if events[pygame.K_LEFT]:
+            #0.002
             if self.direction_vector[0] > 0  and self.direction_vector[1] >= 0:
                 self.direction_vector[0] += 0.002
                 self.direction_vector[1] -= 0.002
@@ -59,11 +68,20 @@ class Car:
         self.direction_vector[1] = 0
         self.x = startpunkt_x
         self.y = startpunkt_y
+
+    def inside_borders(self):
+        if Screen_width -20 < self.x:
+            print("Jeppppp")
+            print(Screen_width)
+            #self.x = Screen_width -20
+    def calculate_car_picture_tilt(self):
+        self.direction_vector
+
     def check_for_Track(self):
-        print(race_track1.get_at((int ( math.floor(self.x)),int ( math.floor(self.y)))))
-        print(race_track1.get_at((int(math.floor(self.x+50)), int(math.floor(self.y)+50))))
-        #or (0, 0, 0, 255) != race_track1.get_at((int(math.floor(self.x + 15)), int(math.floor(self.y + 15)))):
-        if (0,0,0,255) != race_track1.get_at((int ( math.floor(self.x)),int ( math.floor(self.y+10)))):
+        self.inside_borders()
+        #mache die hitbox quadratisch damit der tilt des Bildes nicht die relative Position des Hitbox ausrivhtung verändert
+        print("Track")
+        if (0,0,0,255) != race_track1.get_at((int ( math.floor(self.x)),int ( math.floor(self.y+15)))) or (0, 0, 0, 255) != race_track1.get_at((int(math.floor(self.x + 20)), int(math.floor(self.y + 35)))):
             self.resetCar()
 
 
@@ -82,7 +100,7 @@ def run_game():
 
     clock = pygame.time.Clock()
     clock.tick(60)
-    screen = pygame.display.set_mode((1024, 768))
+    screen = pygame.display.set_mode((Screen_width, Screen_height))
     car1 = Car(startpunkt_x,startpunkt_y)
     run = True
 
@@ -96,7 +114,8 @@ def run_game():
     quit()
 run_game()
 
-
+# 0.002 * x = 1  <=> x = 500.0
+# 0.18 gard pro move
 
 
 
