@@ -1,8 +1,6 @@
 import pygame
 import math
 
-from pygame.examples.go_over_there import screen
-
 #TODO: click wehere to start -> while loop mit while startpunkt x/y none -> wenn click dann setze
 #TODO: fix borders of car -> again -> make a bigger hit circle
 # TODO make the impoting of a picture variable via drag and drop
@@ -47,7 +45,7 @@ class Car:
         screen.blit(self.rotated_car_img, self.car_rect.topleft) #(self.x, self.y)
 
 
-    def movement(self, events):
+    def movement(self, events, dt):
 
 
         '''if events[pygame.K_LEFT]:
@@ -83,22 +81,22 @@ class Car:
                 self.direction_vector[1] -= 0.002'''
 
         if events[pygame.K_UP] and self.speed < self.max_speed: # increase the speed until the max has been reached
-            self.speed += 0.001
+            self.speed += 0.001 * dt
         if events[pygame.K_DOWN] and self.speed > self.min_speed: # decrease the speed until the min has been reached
-            self.speed -= 0.001
+            self.speed -= 0.001 * dt
 
         #another way to change the direction
         if events[pygame.K_LEFT]:
-            self.current_rotation_angle = self.current_rotation_angle - 0.18
+            self.current_rotation_angle = self.current_rotation_angle - 0.18 * dt
         if events[pygame.K_RIGHT]:
-            self.current_rotation_angle = self.current_rotation_angle + 0.18
+            self.current_rotation_angle = self.current_rotation_angle + 0.18 * dt
 
         #calculate new angle x with cos and y with sin
         self.direction_vector[0] = 1 * math.cos(math.radians(self.current_rotation_angle))
         self.direction_vector[1] = 1 * math.sin(math.radians(self.current_rotation_angle))
 
-        self.x += self.direction_vector[0] * self.speed
-        self.y += self.direction_vector[1] * self.speed
+        self.x += self.direction_vector[0] * self.speed * dt
+        self.y += self.direction_vector[1] * self.speed * dt
         self.rotate_image()
 
     def resetCar(self):
@@ -139,11 +137,11 @@ class Car:
         self.car_rect = self.rotated_car_img.get_rect(center=(self.x + 25, self.y +25))
 
 
-def fill_window(screen, car, events):
+def fill_window(screen, car, events, dt):
     #drawTrack
     screen.blit(race_track1, (0,0))
     car.draw(screen)
-    car.movement(events)
+    car.movement(events, dt)
     car.check_for_Track()
     pygame.display.update()
 
@@ -153,7 +151,7 @@ def run_game():
     pygame.init()
 
     clock = pygame.time.Clock()
-    clock.tick(60)
+    dt = clock.tick(60)/50
     screen = pygame.display.set_mode((Screen_width, Screen_height))
     car1 = Car(startpunkt_x,startpunkt_y)
     run = True
@@ -163,7 +161,8 @@ def run_game():
             if event.type == pygame.QUIT:
                 run = False
         events = pygame.key.get_pressed()
-        fill_window(screen, car1, events)
+        fill_window(screen, car1, events, dt)
+
     pygame.quit()
     quit()
 run_game()
@@ -183,7 +182,7 @@ run_game()
 # vltt check point ? -> müssen auch gestezt werden ? path find algo ?
 #max gen 50
 
-
+print("test")
 
 
 
